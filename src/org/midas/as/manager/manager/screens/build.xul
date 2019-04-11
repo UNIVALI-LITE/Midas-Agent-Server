@@ -1,0 +1,94 @@
+<panel name="buildPanel" columns="1" top="5" left="5" bottom="5" right="5" gap="10">
+	<splitpane weightx="1" weighty="1" divider="300">
+		<panel weightx="1" weighty="1" columns="1" top="5" left="5" bottom="5" right="5" gap="8">
+			<panel name="treePanel" text="Structure" border="true" columns="1" weighty="1" weightx="1" top="5" left="5" bottom="5" right="5" gap="5">
+				<tree name="structureTree" weightx="1" weighty="1" action="displayDetails(structureTree)" />
+			</panel>
+		</panel>
+	
+		<panel weightx="1" weighty="1" columns="2" top="5" left="5" bottom="5" right="5" gap="8">
+			<panel colspan="2" name="asPanel" columns="6" text="Agent Server" border="true" columns="1" weightx="1" weighty="1" top="5" left="5" bottom="5" right="5" gap="5">
+				<panel name="asInfoPanel" text="Info" border="true" columns="4" top="4" left="4" bottom="4" right="4" gap="4">
+					<label text="Name :" /> <textfield name="containerNameField" weightx="1" />
+					<label text="Server :" /> <textfield name="containerPathField" weightx="1"/>
+					<label text="Location :" /> <textfield colspan="3" name="containerServerField" weightx="1" />
+				</panel>
+				<panel name="asDataSourcePanel" text="DataSources" border="true" columns="3" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4" columns="3">
+					<list weightx="1" weighty="1" colspan="3" />
+					<button text="Add" weightx="1"/>
+					<button text="Edit" weightx="1"/>
+					<button text="Remove" weightx="1" />
+				</panel>
+			</panel>
+					
+			<panel name="organizationPanel" text="Organization" border="true" columns="3" weightx="1" top="5" left="5" bottom="5" right="5" gap="5">
+				<panel colspan="3" name="organizationSelectPanel"  text="Selection" border="true" columns="2" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4">
+					<label text="Organization: " valign="center"/>
+					<combobox name="organizationComboBox" weightx="1" valign="center"/>
+				</panel>
+				<panel colspan="3" name="organizationInfoPanel" text="Info" border="true" columns="2" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4">
+					<label text="Name :" /> <textfield name="organizationNameField" weightx="1" />
+					<label text="Package :" /> <textfield name="organizationPackageField" weightx="1" />
+				</panel>
+				<button text="Add" weightx="1" />
+				<button text="Edit" weightx="1" />
+				<button text="Remove" weightx="1" />						
+			</panel>
+			
+			<panel name="entityPanel" text="Entity" border="true" columns="3" weightx="1" top="5" left="5" bottom="5" right="5" gap="5">
+				<panel colspan="2" name="entitySelectPanel" text="Selection" border="true" columns="2" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4">
+					<label text="Entity: " />
+					<combobox name="entityComboBox" weightx="1" />
+				</panel>
+				<panel name="entityProtocolPanel" text="Protocol" border="true" columns="2" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4">
+					<label text="Protocol:" /> 
+					<combobox name="entityProtocolComboBox" weightx="1">
+						<choice text="1" />
+						<choice text="2" />
+					</combobox>
+				</panel>
+				<panel colspan="3" name="entityInfoPanel" text="Info" border="true" columns="4" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4">
+					<label text="Name :" /> 
+					<textfield name="entityNameField" weightx="1" />
+					<label text="Type :" />
+					<combobox name="entityTypeComboBox" weightx="1">
+						<choice text="Agent" />
+						<choice text="Component" />
+					</combobox>
+					<label text="Package :" /> 
+					<textfield name="entityPackageField" weightx="1" />
+					<label text="Class :" /> 
+					<textfield name="entityClassField" weightx="1" />			
+				</panel>
+				<button text="Add" weightx="1" />
+				<button text="Edit" weightx="1" />
+				<button text="Remove" weightx="1" />						
+			</panel>
+			
+			<panel colspan="2" name="servicePanel" text="Service" border="true" weightx="1" weighty="1" top="5" left="5" bottom="5" right="5" gap="5" columns="2">
+				<panel name="serviceSelectPanel" text="Selection" border="true" columns="2" weightx="1" top="4" left="4" bottom="4" right="4" gap="4" >
+					<panel valign="center" weightx="1" weighty="1">
+						<label text="Service: " />
+						<combobox name="serviceComboBox" weightx="1" />
+					</panel>
+				</panel>
+					
+				<panel name="serviceInfoPanel" text="Info" border="true" columns="4" top="4" weightx="1" left="4" bottom="4" right="4" gap="4">
+					<label text="Name :" /> <textfield name="serviceNameField" weightx="1"/>
+					<label text="Scope :" /> <textfield name="serviceScopeField" weightx="1" />
+					<label text="Path :" /> <textfield colspan="3" name="servicePathField" weightx="1" />
+				</panel>
+	
+				<panel name="asParameterPanel" colspan="2" text="Parameters" border="true" columns="3" weightx="1" weighty="1" top="4" left="4" bottom="4" right="4" gap="4" columns="3">
+					<table name="parameterTable" weightx="1" weighty="1">
+						<header>
+							<column text="Name" />
+							<column text="Array" />
+							<column text="Class" />
+						</header>													
+					</table>
+				</panel>		
+			</panel>
+		</panel>
+	</splitpane>
+</panel>

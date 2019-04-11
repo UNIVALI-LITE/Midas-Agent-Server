@@ -1,0 +1,26 @@
+<panel name="mainPanel" columns="1">
+	<menubar weightx="1">
+		<menu text="Main">
+			<menuitem name="startMenuItem" text="Connect" action="connect()" />
+			<menuitem name="stopMenuItem"  text="Disconnect" enabled="false" action="disconnect()"  />
+			<separator />
+			<menuitem name="resetMenuItem" text="Reset" enabled="false" action="reset()" />
+			<separator />
+			<menuitem text="Exit"  action="exit()"  />
+		</menu>		
+		<menu text="Catalog">
+			<menuitem name="refreshCatalog" text="Refresh" action="refreshCatalog()" />
+		</menu>
+		<menu text="Agents">
+			<menuitem name="wakeMenuItem" text="Wake Agents" action="wakeAgents()" />
+			<menuitem name="killMenuItem" text="Kill Agents" action="killAgents()" enabled="false" />
+		</menu>
+	</menubar>
+
+	<panel top="4" left="4" bottom="4" right="4" gap="4" columns="1" weightx="1" weighty="1">
+		<tabbedpane weightx="1" weighty="1" placement="top">
+			<tab name="viewTab"  text="View"  />
+			<tab name="buildTab" text="Build" />
+		</tabbedpane>
+	</panel>
+</panel>
