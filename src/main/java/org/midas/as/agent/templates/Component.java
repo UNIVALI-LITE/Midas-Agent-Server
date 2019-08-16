@@ -11,14 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The Component template is one of the main classes of the MIDAS structure. It´s
+ * The Component template is one of the main classes of the MIDAS structure. ItÂ´s
  * an abstract class, that must be extend in order to create concrete components 
  * that provides support and data funcionallity to the agents. 
  */
 public abstract class Component implements Provider 
 {	
 	/**
-	 * Abstract method that acts as the providing interface for the component´s services, 
+	 * Abstract method that acts as the providing interface for the componentÂ´s services, 
 	 * must be implemented by the concrete component class.
 	 * 
 	 * @param service  Service name

@@ -7,7 +7,7 @@ import org.midas.as.agent.EntityException;
 
 /**
  * This exception is thrown by the {@link Agent} whenever problems occurs within
- * it´s life cycle.
+ * itÂ´s life cycle.
  */
 public class LifeCycleException extends EntityException
 {

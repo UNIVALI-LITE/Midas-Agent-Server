@@ -3,9 +3,9 @@ package org.midas.as.broker;
 import org.midas.as.AgentServerException;
 
 /**
- * Esta exceção é disparada caso hajam problemas de comunicação com
- * o servidor. As causas podem ser problemas na rede ou requisições
- * mal construídas.
+ * Esta exceÃ§Ã£o Ã© disparada caso hajam problemas de comunicaÃ§Ã£o com
+ * o servidor. As causas podem ser problemas na rede ou requisiÃ§Ãµes
+ * mal construÃ­das.
  */
 public class BrokerException extends AgentServerException 
 {

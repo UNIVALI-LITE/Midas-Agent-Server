@@ -25,19 +25,19 @@ import org.midas.metainfo.EntityInfo;
  */
 public class ServiceWrapper implements Callable<List>
 {
-	// Vari·veis de InformaÁ„o
+	// Vari√°veis de Informa√ß√£o
 	private  String  provider;
 	private  String  requester;	
 	
-	// Vari·veis de Par‚metros
+	// Vari√°veis de Par√¢metros
 	private  Map<String,Object> in;
 	private  List<Object>       out;
 	
-	// Vari·veis de Meta-InformaÁ„o
+	// Vari√°veis de Meta-Informa√ß√£o
 	private  String  service;
 	private  String  organization;
 	
-	// Vari·veis de QoS
+	// Vari√°veis de QoS
 	private  long        startTime;
 	private  long        endTime;
 	
@@ -77,48 +77,48 @@ public class ServiceWrapper implements Callable<List>
 	}
 	
 	/**
-	 *  Implement from callable, it¥s invoked by the {@link Execution Pool},
-	 *  when the service is fired from it¥s regular methods. This method must
+	 *  Implement from callable, it¬¥s invoked by the {@link Execution Pool},
+	 *  when the service is fired from it¬¥s regular methods. This method must
 	 *  not be invoked directly. It proccess the service, and states the QoS
 	 *  metrics.
 	 */	
 	public List call() throws ProxyException,ServiceException 
 	{
-		// Inicializando vetor de saÌda
+		// Inicializando vetor de sa√≠da
 		out = new ArrayList<Object>(10);
 		
 		try
 		{
-			// Incrementando mÈtrica de threads ativas
+			// Incrementando m√©trica de threads ativas
 			ExecutionPool.increaseThreadCount();
 			
-			// Marcando tempo de inÌcio
+			// Marcando tempo de in√≠cio
 			startTime = System.currentTimeMillis();
 						
-			// Processando ServiÁo
+			// Processando Servi√ßo
 			Proxy.getInstance().require(organization,service,in,out);
 			
-			// Marcando tempo de tÈrmino
+			// Marcando tempo de t√©rmino
 			endTime = System.currentTimeMillis();
 			
-			// Decrementando mÈtrica de threads ativas
+			// Decrementando m√©trica de threads ativas
 			ExecutionPool.decreaseThreadCount();
 			
 			
-			// TODO: Verificar se este È o local ideal para 
+			// TODO: Verificar se este √© o local ideal para 
 			// invocar o logging...
 			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
 							"\nRequirer: "+requester+"  -  Provider: "+provider,true);			
 		}
 		catch (ServiceException e)
 		{		
-			// Marcando tempo de tÈrmino
+			// Marcando tempo de t√©rmino
 			endTime = System.currentTimeMillis();
 			
-			// Decrementando mÈtrica de threads ativas
+			// Decrementando m√©trica de threads ativas
 			ExecutionPool.decreaseThreadCount();
 			
-			// TODO: Verificar se este È o local ideal para 
+			// TODO: Verificar se este √© o local ideal para 
 			// invocar o logging...
 			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
 							"\nRequirer: "+requester+"  -  Provider: "+provider+			
@@ -128,13 +128,13 @@ public class ServiceWrapper implements Callable<List>
 		}
 		catch (ProxyException e)
 		{			
-			// Marcando tempo de tÈrmino
+			// Marcando tempo de t√©rmino
 			endTime = System.currentTimeMillis();
 			
-			// Decrementando mÈtrica de threads ativas
+			// Decrementando m√©trica de threads ativas
 			ExecutionPool.decreaseThreadCount();
 			
-			// TODO: Verificar se este È o local ideal para 
+			// TODO: Verificar se este √© o local ideal para 
 			// invocar o logging...
 			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
 							"\nRequirer: "+requester+"  -  Provider: not found"+			
@@ -144,13 +144,13 @@ public class ServiceWrapper implements Callable<List>
 		}		
 		catch (RuntimeException e)
 		{
-			// Marcando tempo de tÈrmino
+			// Marcando tempo de t√©rmino
 			endTime = System.currentTimeMillis();
 			
-			// Decrementando mÈtrica de threads ativas
+			// Decrementando m√©trica de threads ativas
 			ExecutionPool.decreaseThreadCount();
 			
-			// TODO: Verificar se este È o local ideal para 
+			// TODO: Verificar se este √© o local ideal para 
 			// invocar o logging...
 			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
 							"\nRequirer: "+requester+"  -  Provider: "+provider+

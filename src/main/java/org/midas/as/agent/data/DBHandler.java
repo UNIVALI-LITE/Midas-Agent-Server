@@ -1,7 +1,7 @@
 /*
  * DBPool.class
  * 
- * Data de CriaÁ„o: 17/04/2005  
+ * Data de Cria√ß√£o: 17/04/2005  
  */
 package org.midas.as.agent.data;
 
@@ -19,13 +19,13 @@ import java.sql.Statement;
  */
 public class DBHandler 
 {
-	// Vari·vel que guarda a conex„o com o BD	
+	// Vari√°vel que guarda a conex√£o com o BD	
 	private Connection connection;
 	
 	/**
-	 * Recebe um objeto de conex„o como par‚metro e o encapsula.
+	 * Recebe um objeto de conex√£o como par√¢metro e o encapsula.
 	 * 
-	 * @param connection - objeto de conex„o com um BD.
+	 * @param connection - objeto de conex√£o com um BD.
 	 */ 
 	protected DBHandler(Connection connection)
 	{
@@ -90,7 +90,7 @@ public class DBHandler
 	 */
 	public void close() throws SQLException
 	{
-		// Fecha a conex„o
+		// Fecha a conex√£o
 		connection.close();
 		
 		// Finaliza o objeto
