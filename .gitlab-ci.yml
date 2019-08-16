@@ -1,0 +1,20 @@
+stages:
+  - Deploy
+
+Maven Deploy:
+  stage: Deploy
+  tags:
+    - linux
+    - maven.smartechnology.com.br
+  script:
+    - mvn clean install package
+    - mvn deploy
+  artifacts:
+    paths:
+      - target/*.jar
+      - target/*.war
+  only:
+    - tags
+  except:
+    - branches
+

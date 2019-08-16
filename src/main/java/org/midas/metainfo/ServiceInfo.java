@@ -72,7 +72,7 @@ public class ServiceInfo implements Comparable,Serializable
 	{
 		String aux="";
 		
-		aux+= ("• Service: "+name+"\n\n");
+		aux+= ("Â• Service: "+name+"\n\n");
 		
 		aux+= ("Path: \n - ");
 		aux+= (path+"\n\n");

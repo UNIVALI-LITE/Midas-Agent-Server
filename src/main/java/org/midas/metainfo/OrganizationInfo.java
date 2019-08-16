@@ -69,7 +69,7 @@ public class OrganizationInfo implements Comparable,Serializable
 	{
 		String aux="";
 		
-		aux+= ("• Organization: "+name+"\n\n");
+		aux+= ("Â• Organization: "+name+"\n\n");
 		
 		aux+= ("Package: \n - ");
 		aux+= (packageName);

@@ -17,23 +17,23 @@ import org.midas.metainfo.ServiceInfo;
 
 public class Catalog 
 {
-	// TODO: Verificar PossÌvel uso de ExceÁıes Personalizadas nos Gets
+	// TODO: Verificar Poss√≠vel uso de Exce√ß√µes Personalizadas nos Gets
 		
-	// Vari·vel que guarda os Meta Dados de um Agent Server
+	// Vari√°vel que guarda os Meta Dados de um Agent Server
 	private static ContainerInfo containerInfo;
 		
-	// HashMap que serve de indÌce para os data sources
+	// HashMap que serve de ind√≠ce para os data sources
 	// Key   = Nome do data source
-	// Value = Array de strings com o driver (1) e a conex„o (2) 
+	// Value = Array de strings com o driver (1) e a conex√£o (2) 
 	private static Map<String,String[]> dataSources;
 		
-	// HashMap que serve de Ìndice para as organizaÁıes que o AS hospeda
-	// Key   = Nome do serviÁo
-	// Value = Objeto do serviÁo
+	// HashMap que serve de √≠ndice para as organiza√ß√µes que o AS hospeda
+	// Key   = Nome do servi√ßo
+	// Value = Objeto do servi√ßo
 	private static Map<String,ServiceInfo> services;
 	
 	/**
-	 * ObtÈm a string do driver pelo nome do Data Source
+	 * Obt√©m a string do driver pelo nome do Data Source
 	 * @param dataSourceName - nome do Data Source
 	 * @return string do driver
 	 */
@@ -44,9 +44,9 @@ public class Catalog
 	
 	
 	/**
-	 * ObtÈm a string de conex„o pelo nome do Data Source
+	 * Obt√©m a string de conex√£o pelo nome do Data Source
 	 * @param dataSourceName - nome do Data Source
-	 * @return string de conex„o
+	 * @return string de conex√£o
 	 */	
 	public static String getDatabaseConnectionString(String source) throws CatalogException
 	{
@@ -54,9 +54,9 @@ public class Catalog
 	}
 	
 	/**
-	 * ObtÈm as strings de driver e conex„o pelo nome do Data Source
+	 * Obt√©m as strings de driver e conex√£o pelo nome do Data Source
 	 * @param dataSourceName - nome do Data Source
-	 * @return strings de driver e conex„o
+	 * @return strings de driver e conex√£o
 	 */
 	private static String[] getDataSourceInfo(String dataSourceName) throws CatalogException
 	{	

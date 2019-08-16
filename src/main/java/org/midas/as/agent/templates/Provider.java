@@ -16,7 +16,7 @@ import org.midas.as.proxy.ProxyException;
 public interface Provider
 {
 	/**
-	 * Method signature that acts as the providing interface for an entity´s service. 
+	 * Method signature that acts as the providing interface for an entityÂ´s service. 
 	 * 
 	 * @param service  Service name
 	 * @param in  Map with the parameters passe along the service requisition

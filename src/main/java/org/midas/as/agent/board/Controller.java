@@ -172,7 +172,7 @@ public class Controller
 
     	pmsgs.trimToSize();
     	
-    	//!!! Talvez n„o funcione esse tipo de casting !!!
+    	//!!! Talvez n√£o funcione esse tipo de casting !!!
     	MessagesArrayType = new Message[pmsgs.size()];    	
     	pmsgs.toArray(MessagesArrayType);
     	*

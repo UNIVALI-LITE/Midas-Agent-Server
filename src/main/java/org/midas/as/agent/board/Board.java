@@ -29,8 +29,8 @@ import org.midas.as.agent.templates.Agent;
  * methods that allows agents to read and record attributes.
  * <p>
  * In order to sign on a message group, an agent has to implement the 
- * {@link Message Listener} interface. It´s also possible for an agent to be warned whenever 
- * there´s a change within the global attributes, for that it has to implement
+ * {@link Message Listener} interface. ItÂ´s also possible for an agent to be warned whenever 
+ * thereÂ´s a change within the global attributes, for that it has to implement
  * the {@link ContextListener} interface, and sign on the board. 
  */
 public class Board
@@ -38,7 +38,7 @@ public class Board
 	// Controlador
 	private static Controller controller = new Controller();
 	
-	// Variáveis Relativas as Mensagens
+	// VariÃ¡veis Relativas as Mensagens
 	private static Map<String,Object> 		   registers           = new ConcurrentHashMap<String,Object>();
 	private static List<ContextListener>       contextListeners    = new CopyOnWriteArrayList<ContextListener>();
 	
@@ -50,7 +50,7 @@ public class Board
     //private static Message[] initMsgs;
 		
     /**
-     * Method that initializes the Board, it´s invoked on 
+     * Method that initializes the Board, itÂ´s invoked on 
      * MIDAS initialization routine.
      * 
      * @param msgsSize  An Integer with the size of the messages cache.
@@ -125,7 +125,7 @@ public class Board
     
     /**
      * Signs an Agent (Implementing the MessageListener interface}), on the 
-     * Board, for a determined group. If the group does not exists, it´s created.
+     * Board, for a determined group. If the group does not exists, itÂ´s created.
      *
      * @param group  Group name
      * @param listener  Listener reference to the implementing Agent 
@@ -140,7 +140,7 @@ public class Board
     		// Recupera lista de ouvintes
     		listeners = groups.get(group);
     	}
-    	//SENÂO
+    	//SENÃ‚O
     	else
     	{
     		// Cria nova lista de ouvintes
@@ -175,7 +175,7 @@ public class Board
      * @param content  The content of the message
      * @param author  Reference to the writing agent
      * 
-     * @throws BoardException  In case the target group doesn´t exists
+     * @throws BoardException  In case the target group doesnÂ´t exists
      */
     public static synchronized void writeOnBoard(int priority, String group,String content,Agent author) 
     	throws BoardException
@@ -186,20 +186,20 @@ public class Board
     		// Recupera lista de ouvintes
     		ArrayList<MessageListener> listeners = groups.get(group);
     		
-    		// Cria objeto da mensagem com a prioridade, grupo, data, escritor e conteúdo.
+    		// Cria objeto da mensagem com a prioridade, grupo, data, escritor e conteÃºdo.
     		Message newmsg = new Message(priority, group,(Long.parseLong(Controller.getDate())), 
     									((author.getClass()).getName()), content);
     		
-    		// Utiliza método do controlador para notificar grupo interessado
+    		// Utiliza mÃ©todo do controlador para notificar grupo interessado
     		controller.messageNotify(listeners, newmsg);
     		
-    		// Coloca mensagem na lista de mensagens disponíveis
+    		// Coloca mensagem na lista de mensagens disponÃ­veis
     		//messages.add(newmsg);
     		
     		// Utiliza metodo do controlador para persistir mensagem
     		//controller.writeMessageLog(newmsg);    			
     	}
-    	// SENÃO
+    	// SENÃƒO
     	else
     	{
     		throw new BoardException("Unable to write message - invalid group ("+group+")");
@@ -214,10 +214,10 @@ public class Board
      */
     public static void writeForAll(String content,Agent author) 
     {
-    	// Constrói mensagem
+    	// ConstrÃ³i mensagem
     	Message newmsg = new Message(0, "All", (Long.parseLong(Controller.getDate())), (author.getClass()).getName(), content);
     	
-    	// Coloca mensagem na lista de mensagens disponíveis
+    	// Coloca mensagem na lista de mensagens disponÃ­veis
     	//messages.add(newmsg);
     	
     	/*Escreve no log 
@@ -241,7 +241,7 @@ public class Board
     }
     
     /**
-     * Set an attribute. If the attribute already exists, it´s updated.
+     * Set an attribute. If the attribute already exists, itÂ´s updated.
      * 
      * @param name  The attribute name
      * @param value  The attribute value
@@ -279,7 +279,7 @@ public class Board
      * 
      * @param name  The attribute name
      * 
-     * @throws BoardException  In case the attribute doesn´t exists.
+     * @throws BoardException  In case the attribute doesnÂ´t exists.
      */ 
     public static Object getContextAttribute(String name) throws BoardException
     {
@@ -288,7 +288,7 @@ public class Board
     	{
     		return (registers.get(name));
     	}
-    	//SENÃO
+    	//SENÃƒO
     	else
     	{
     		throw new BoardException("Invalid attribute name '"+name+"'");
@@ -302,7 +302,7 @@ public class Board
     	{
     		registers.remove( name );
     	}
-    	//SENÃO
+    	//SENÃƒO
     	else
     	{
     		throw new BoardException("Invalid attribute name '"+name+"'");
