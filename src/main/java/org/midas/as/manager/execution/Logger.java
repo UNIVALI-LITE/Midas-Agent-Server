@@ -4,7 +4,7 @@ import org.midas.as.manager.manager.ManagerScreen;
 
 /**
  * The Logger class operates the logging of the MIDAS events and
- * ocurrences. It´s invoked by the {@link ServiceWrapper} objects,
+ * ocurrences. It's invoked by the {@link ServiceWrapper} objects,
  * to record their processing status and results.   
  */
 public class Logger

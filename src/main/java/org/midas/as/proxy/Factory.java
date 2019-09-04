@@ -21,7 +21,7 @@ import org.midas.as.catalog.CatalogException;
  * Esta classe atua como um manipulador de eventos e um Factory Method ataves
  * do qual e possivel abstrair o processo de criacao de instancias de organiza-
  * coes. Ela solicita colaboracao da classe CatalogParser para localizar servi-
- * cos no arquivo XML e devolver a instância para a classe MASThread.
+ * cos no arquivo XML e devolver a instÃ¢ncia para a classe MASThread.
  */
 public class Factory 
 {
@@ -106,13 +106,13 @@ public class Factory
 	public Provider instantiateEntity(String entityClassName) 
 		throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
-		// Carrega a classe através do ClassLoader do MIDAS
+		// Carrega a classe atravÃ©s do ClassLoader do MIDAS
 		Class entityClass = loadClass(entityClassName);
 		
 		// Instancia um objeto da classe
 		Object entityObject = entityClass.newInstance();
 		
-		// Realiza um casting, guardando a referência à 
+		// Realiza um casting, guardando a referÃªncia a 
 		// entidade numa interface provedora
 		Provider entityInterface = (Provider)entityObject; 
 		

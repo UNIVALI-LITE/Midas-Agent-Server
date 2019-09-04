@@ -110,10 +110,6 @@ public class Manager
 			Integer port = Integer.valueOf(Catalog.getContainerInfo().getContainerPort());
 			Server server = new Server(port);
 			
-//			ServletContextHandler ctxHandler = new ServletContextHandler();
-//			ctxHandler.setContextPath("agentserver");
-//			ctxHandler.addServlet(Receiver.class, "/broker/receiver");
-			
 			ServletHandler handler = new ServletHandler();
 	        server.setHandler(handler);
 	        handler.addServletWithMapping(Receiver.class, "/agentserver/broker/receiver");

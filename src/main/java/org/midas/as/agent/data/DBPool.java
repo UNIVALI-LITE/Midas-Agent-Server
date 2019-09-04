@@ -1,7 +1,7 @@
 /*
  * DBPool.class
  * 
- * Data de CriaÁ„o: 17/04/2005  
+ * Data de CriaÔøΩÔøΩo: 17/04/2005  
  */
 package org.midas.as.agent.data;
 
@@ -53,7 +53,7 @@ public class DBPool
 	
 	/**
 	 * Returns a Database Handler for the specifiedd ado um determinado source definido 
-	 * no cat·logo de estrutura.
+	 * no catalogo de estrutura.
 	 * 
 	 * @param dataSource  Data source name
 	 * 
@@ -64,13 +64,13 @@ public class DBPool
 	 */	
 	public static DBHandler getDatabaseHandler(String dataSource) throws DatabaseException, CatalogException
 	{
-		// SE a fonte de dados j· foi carregada
+		// SE a fonte de dados j√° foi carregada
 		if (connections.containsKey(dataSource))
 		{
-			// Recupera a String de Conex„o do HashMap
+			// Recupera a String de Conex√£o do HashMap
 			String connString = (String)connections.get(dataSource);
 			
-			// ObtÈm uma nova conex„o
+			// Obt√©m uma nova conex√£o
 			Connection conn = null;
 			
 			try
@@ -85,10 +85,10 @@ public class DBPool
 			// Retorna o manipulador
 			return (new DBHandler(conn));
 		}
-		// SEN√O
+		// SEN√ÉO
 		else
 		{						
-			// Recupera os valores do Cat·logo
+			// Recupera os valores do Cat√°logo
 			String driver     = Catalog.getDatabaseDriver(dataSource);
 			String connString = Catalog.getDatabaseConnectionString(dataSource);
 				
@@ -102,10 +102,10 @@ public class DBPool
 				throw new DatabaseException("Unable to find datasource - "+dataSource+" - driver, "+driver+" must be on classpath",e);
 			}
 			
-			// Insere a string de conex„o no HashMap
+			// Insere a string de conex√£o no HashMap
 			connections.put(dataSource,connString);
 
-			// ObtÈm uma nova conex„o			
+			// Obt√©m uma nova conex√£o			
 			Connection conn = null;
 			
 			try
@@ -117,7 +117,7 @@ public class DBPool
 				e.printStackTrace();
 			}
 			
-			// Instancia um manipulador sobre esta conex„o
+			// Instancia um manipulador sobre esta conex√£o
 			DBHandler newHandler = new DBHandler(conn);
 						
 			// Retorna o manipulador

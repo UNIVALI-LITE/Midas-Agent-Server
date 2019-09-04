@@ -45,8 +45,8 @@ public abstract class MidasBean implements Serializable
 	/**
 	 * 
 	 * @param fieldName nome do atributo
-	 * @param value ReferÍncia genÈrica a qual ser· atribuÌda o atributo recuperado 
-	 * @return boolean > true caso a recuperaÁ„o seja bem-sucedida / false caso contr·rio
+	 * @param value Refer√™ncia gen√©rica a qual ser√° atribu√≠da o atributo recuperado 
+	 * @return boolean > true caso a recupera√ß√£o seja bem-sucedida / false caso contr√°rio
 	 */
 	public boolean setField(String fieldName,Object value)
 	{

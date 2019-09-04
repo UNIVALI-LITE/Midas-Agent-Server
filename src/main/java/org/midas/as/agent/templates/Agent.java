@@ -16,13 +16,13 @@ import org.midas.as.manager.manager.Manager;
 import org.midas.metainfo.ContainerInfo;
 
 /**
- * The Agent template is one of the main classes of the MIDAS structure. It´s
+ * The Agent template is one of the main classes of the MIDAS structure. Itï¿½s
  * an abstract class, that must be extend in order to create concrete agents that
  * implement the business running over the MIDAS platform.
  * 
  * It implements methods that allow the agent to require services and to access 
  * meta-data regarding its own container, and requires the concrete agent to implement
- * the methods that are invoked by the architecture to require the agent´s services,
+ * the methods that are invoked by the architecture to require the agentï¿½s services,
  * and the lifeCycle of the agent. 
  */
 public abstract class Agent implements Provider,Callable<Object>
@@ -30,7 +30,7 @@ public abstract class Agent implements Provider,Callable<Object>
 	public volatile boolean alive = true;
 	
 	/**
-	 * Abstract method that acts as the providing interface for the agent´s services, 
+	 * Abstract method that acts as the providing interface for the agents services, 
 	 * must be implemented by the concrete agent class.
 	 * 
 	 * @param service  Service name
@@ -60,8 +60,8 @@ public abstract class Agent implements Provider,Callable<Object>
 	}
 	
 	/**
-	 * Implemented method from the Callable interface, it´s invoked in a separate thread
-	 * from an execution pool, to fire the agent´s life cycle. Must not be invoked directly. 
+	 * Implemented method from the Callable interface, its invoked in a separate thread
+	 * from an execution pool, to fire the agent life cycle. Must not be invoked directly. 
 	 * 
 	 * @throws Exception  In case any exception occurs within the lifeCycle processing, the different possible exceptions are further filtered by the MIDAS.
 	 */
