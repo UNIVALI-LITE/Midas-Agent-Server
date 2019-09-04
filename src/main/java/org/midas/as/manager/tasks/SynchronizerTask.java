@@ -7,6 +7,7 @@ import org.midas.as.manager.manager.Manager;
 
 public class SynchronizerTask implements Callable<Object>
 {	
+	// TODO - Modificar o codigo para tentar reconectar sempre
 	public Object call() 
 	{
 		Broker broker = Broker.getInstance();

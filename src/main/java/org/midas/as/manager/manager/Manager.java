@@ -11,6 +11,7 @@ import java.util.concurrent.FutureTask;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.midas.as.AgentServer;
 import org.midas.as.agent.board.Board;
 import org.midas.as.agent.templates.Agent;
 import org.midas.as.broker.Broker;
@@ -19,28 +20,30 @@ import org.midas.as.broker.Receiver;
 import org.midas.as.catalog.Catalog;
 import org.midas.as.catalog.CatalogException;
 import org.midas.as.manager.ManagerException;
-import org.midas.as.manager.execution.Logger;
 import org.midas.as.manager.execution.ServiceWrapper;
 import org.midas.as.manager.execution.ServiceWrapperException;
-import org.midas.as.manager.tasks.StatisticsTask;
 import org.midas.as.manager.tasks.SynchronizerTask;
 import org.midas.as.proxy.Factory;
 import org.midas.metainfo.EntityInfo;
 import org.midas.metainfo.NativeAgentInfo;
 import org.midas.metainfo.OrganizationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Manager 
 {
+	private static Logger LOG = LoggerFactory.getLogger(AgentServer.class);
+	
 	// Singleton
 	private static Manager manager;
 	
-	// Vari�veis de estado
+	// Variáveis de estado
 	private static boolean initialized = false;
 	private static boolean connected   = false;
 	private static boolean agentsAlive = false;
 	private static boolean stopping;
 			
-	// Vari�veis que guarda as Rotinas de Funcionamento
+	// Variáveis que guardam as Rotinas de Funcionamento
 	private static List<FutureTask>  	  onlineTasks 	  = new ArrayList<FutureTask>(10);
 	private static ExecutorService 		  onlineTasksPool = Executors.newFixedThreadPool(1);
 	
@@ -52,7 +55,7 @@ public class Manager
 	private static ExecutorService 		  		  lifeCycleTasksPool  = Executors.newCachedThreadPool();
 			
 	/**
-	 * Construtor privado para for�ar o uso do padr�o singleton
+	 * Construtor privado para forçar o uso do padrão singleton
 	 */ 
 	private Manager()
 	{
@@ -60,7 +63,7 @@ public class Manager
 	}
 	
 	/**
-	 * M�todo que retorna uma inst�ncia �nica de Manager
+	 * Método que retorna uma instância única de Manager
 	 */
 	public static Manager getInstance()
 	{
@@ -73,13 +76,13 @@ public class Manager
 	}
 	
 	/**
-	 * Rotina de inicializa��o do MAS. Se utiliza do modelo de recursos para 
-	 * recuperar a lista de servi�os, o URL do servidor, e o nome do MAS 
+	 * Rotina de inicialização do MAS. Se utiliza do modelo de recursos para 
+	 * recuperar a lista de serviços, o URL do servidor, e o nome do MAS 
 	 * e do modelo de mensagens para efetivar o cadastramento do MAS no TS.
 	 */
 	public void initialize() throws ManagerException
 	{		
-		// 1. Carrega o cat�logo
+		// 1. Carrega o catálogo
 		try
 		{
 			Catalog.loadCatalog();
@@ -92,14 +95,14 @@ public class Manager
 		// 2. Carrega o Board
 		Board.initializeBoard();
 				
-		// 4. Inicializando tarefas StandAlone
-		standAloneTasks.add(new FutureTask<Object>(new StatisticsTask()));
+		// 4. Inicializa tarefas StandAlone
+		//standAloneTasks.add(new FutureTask<Object>(new StatisticsTask()));
 		
 		// 5. Disparando tarefas StandAlone
-		for (FutureTask task : standAloneTasks)
-		{
-			standAloneTasksPool.execute(task);
-		}
+		//for (FutureTask task : standAloneTasks)
+		//{
+			//standAloneTasksPool.execute(task);
+		//}
 		
 		// 6. Sinalizando Estado
 		stopping = false;
@@ -114,50 +117,23 @@ public class Manager
 	        server.setHandler(handler);
 	        handler.addServletWithMapping(Receiver.class, "/agentserver/broker/receiver");
 	        
-			server.start();
-	        System.out.println("Jetty in "+port);
+			server.start();	        
 		}
 		catch (Exception e) 
 		{
-			throw new ManagerException("Unable to start tomcat, check that port "+Catalog.getContainerInfo().getContainerPort()+" is free.",e);
-		}
+			throw new ManagerException("Unable to start Jetty, check that port "+Catalog.getContainerInfo().getContainerPort()+" is free.",e);
+		}		
 	}
 	
 	public void connect() throws ManagerException
 	{
-		// 1. Subindo o servi�o do tomcat	
-		/*
-		try 
-		{			
-			File tomcatDirectory = new File(Catalog.getContainerInfo().getPath()+"/tomcat"); 
-			
-			if (tomcatDirectory.isDirectory())
-				tomcat.start(Catalog.getContainerInfo().getPath()+"/tomcat",Integer.parseInt(Catalog.getContainerInfo().getContainerPort()));
-			else
-			{
-				throw new ManagerException("Unable to find tomcat engine, check that path description on structure.xml points to a valid MIDAS Agent Server installation");
-			}
-		} 
-		catch (Exception e) 
-		{
-			throw new ManagerException("Unable to start tomcat, check that port "+Catalog.getContainerInfo().getContainerPort()+" is free.",e);
-		}
-		*/
-		
-			
-		// 2. Registrando no MAS
+		// 1. Registrando no MAS
 		try 
 		{
 			Broker.registerOnServer();
 		} 
 		catch (BrokerException e) 
 		{
-			try
-			{
-				//tomcat.stop();
-			}
-			catch (Exception e1){}
-			
 			throw new ManagerException("Unable to register on MAS",e);
 		}
 				
@@ -170,28 +146,27 @@ public class Manager
 			onlineTasksPool.execute(task);
 		}		
 		
-		// 5. Atualizando Vari�veis de Estado
+		// 5. Atualizando Variáveis de Estado
 		connected = true;
 		
-		// 6. Atualizando Interface com o Usu�rio		
-		Logger.addEntry("Connected on server");
+		// 6. Atualizando Interface com o Usuário		
 		ManagerScreen.userInterfaceEvent("Connected");				
 	}
 	
 	@SuppressWarnings("rawtypes")
 	public void disconnect(boolean intentional)
 	{		
-		// 1. Atualizando vari�veis de estado
+		// 1. Atualizando variáveis de estado
 		stopping=true;
 		connected=false;
 		
-		// 2. Avisando Finaliza��o se Necess�rio
+		// 2. Avisando Finalização se Necessário
 		if (!intentional)			
-			Logger.addEntry("Disconnected from server - Appears to be offline or out of synchronization");
+			LOG.info("Disconnected from server - Appears to be offline or out of synchronization");
 		else
-			Logger.addEntry("Disconnected from server");
+			LOG.warn("Disconnected from server");
 		
-		// 3. Atualizando Interface com o Usu�rio		
+		// 3. Atualizando Interface com o Usuário		
 		ManagerScreen.userInterfaceEvent("Disconnected");
 		
 		// 4. Terminando tarefas online
@@ -229,10 +204,11 @@ public class Manager
 					
 					try
 					{
-						
 						Agent agent = (Agent)(Factory.getInstance().instantiateEntity(orgPackage+"."+entPackage+"."+entClassName));
 						lifeCycleAgents.put(agent.getClass().toString().substring(6),agent);
 						lifeCycleTasks.put(agent.getClass().toString().substring(6),new FutureTask<Object>(agent));										
+						
+						LOG.info("Waking "+agent.getClass().getSimpleName());
 					}
 					catch (Exception e)
 					{	

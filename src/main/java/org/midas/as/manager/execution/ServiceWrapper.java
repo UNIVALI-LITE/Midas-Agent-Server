@@ -10,11 +10,14 @@ import java.util.concurrent.Future;
 
 import org.midas.as.agent.templates.Agent;
 import org.midas.as.agent.templates.ServiceException;
+import org.midas.as.broker.Receiver;
 import org.midas.as.catalog.Catalog;
 import org.midas.as.catalog.CatalogException;
 import org.midas.as.proxy.Proxy;
 import org.midas.as.proxy.ProxyException;
 import org.midas.metainfo.EntityInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents a service requisition. It holds several information
@@ -25,6 +28,8 @@ import org.midas.metainfo.EntityInfo;
  */
 public class ServiceWrapper implements Callable<List>
 {
+	private static Logger LOG = LoggerFactory.getLogger(Receiver.class);
+	
 	// Variáveis de Informação
 	private  String  provider;
 	private  String  requester;	
@@ -84,31 +89,29 @@ public class ServiceWrapper implements Callable<List>
 	 */	
 	public List call() throws ProxyException,ServiceException 
 	{
-		// Inicializando vetor de sa�da
+		// Inicializando vetor de saída
 		out = new ArrayList<Object>(10);
 		
 		try
 		{
-			// Incrementando m�trica de threads ativas
+			// Incrementando métrica de threads ativas
 			ExecutionPool.increaseThreadCount();
 			
-			// Marcando tempo de in�cio
+			// Marcando tempo de início
 			startTime = System.currentTimeMillis();
 						
-			// Processando Servi�o
+			// Processando Serviço
 			Proxy.getInstance().require(organization,service,in,out);
 			
-			// Marcando tempo de t�rmino
+			// Marcando tempo de término
 			endTime = System.currentTimeMillis();
 			
-			// Decrementando m�trica de threads ativas
-			ExecutionPool.decreaseThreadCount();
+			// Decrementando métrica de threads ativas
+			ExecutionPool.decreaseThreadCount();			
 			
-			
-			// TODO: Verificar se este � o local ideal para 
+			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: "+provider,true);			
+			LOG.debug("Executed "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+" - Provider: "+provider,true);			
 		}
 		catch (ServiceException e)
 		{		
@@ -120,9 +123,7 @@ public class ServiceWrapper implements Callable<List>
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: "+provider+			
-							"\n - Exception: ServiceException",false);
+			LOG.error("ERROR Invoking "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+"  -  Provider: "+provider+	" - Exception: ServiceException",false);
 			
 			throw e;
 		}
@@ -136,9 +137,7 @@ public class ServiceWrapper implements Callable<List>
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: not found"+			
-							"\n - Exception: ProxyException",false);
+			LOG.error("ERROR Invoking "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+"  -  Provider: not found - Exception: ProxyException",false);
 			
 			throw e;
 		}		
@@ -152,13 +151,8 @@ public class ServiceWrapper implements Callable<List>
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: "+provider+
-							"\n - Exception: RuntimeException",false);
-						
-			System.out.println("RUNTIME EXCEPTION!!! ");
-			e.printStackTrace();
-			
+			LOG.error("ERROR Invoking "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+"  -  Provider: "+provider+" - Exception: RuntimeException",false);
+												
 			throw new ServiceException("Service threw a Runtime Exception",e);
 		}
 		
