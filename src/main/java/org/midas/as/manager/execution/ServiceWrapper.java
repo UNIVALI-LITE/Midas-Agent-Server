@@ -10,11 +10,14 @@ import java.util.concurrent.Future;
 
 import org.midas.as.agent.templates.Agent;
 import org.midas.as.agent.templates.ServiceException;
+import org.midas.as.broker.Receiver;
 import org.midas.as.catalog.Catalog;
 import org.midas.as.catalog.CatalogException;
 import org.midas.as.proxy.Proxy;
 import org.midas.as.proxy.ProxyException;
 import org.midas.metainfo.EntityInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class represents a service requisition. It holds several information
@@ -25,6 +28,8 @@ import org.midas.metainfo.EntityInfo;
  */
 public class ServiceWrapper implements Callable<List>
 {
+	private static Logger LOG = LoggerFactory.getLogger(Receiver.class);
+	
 	// Variáveis de Informação
 	private  String  provider;
 	private  String  requester;	
@@ -77,8 +82,8 @@ public class ServiceWrapper implements Callable<List>
 	}
 	
 	/**
-	 *  Implement from callable, it´s invoked by the {@link Execution Pool},
-	 *  when the service is fired from it´s regular methods. This method must
+	 *  Implement from callable, its invoked by the {@link Execution Pool},
+	 *  when the service is fired from its regular methods. This method must
 	 *  not be invoked directly. It proccess the service, and states the QoS
 	 *  metrics.
 	 */	
@@ -102,13 +107,11 @@ public class ServiceWrapper implements Callable<List>
 			endTime = System.currentTimeMillis();
 			
 			// Decrementando métrica de threads ativas
-			ExecutionPool.decreaseThreadCount();
-			
+			ExecutionPool.decreaseThreadCount();			
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: "+provider,true);			
+			LOG.debug("Executed "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+" - Provider: "+provider,true);			
 		}
 		catch (ServiceException e)
 		{		
@@ -120,9 +123,7 @@ public class ServiceWrapper implements Callable<List>
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: "+provider+			
-							"\n - Exception: ServiceException",false);
+			LOG.error("ERROR Invoking "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+"  -  Provider: "+provider+	" - Exception: ServiceException",false);
 			
 			throw e;
 		}
@@ -136,9 +137,7 @@ public class ServiceWrapper implements Callable<List>
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: not found"+			
-							"\n - Exception: ProxyException",false);
+			LOG.error("ERROR Invoking "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+"  -  Provider: not found - Exception: ProxyException",false);
 			
 			throw e;
 		}		
@@ -152,13 +151,8 @@ public class ServiceWrapper implements Callable<List>
 			
 			// TODO: Verificar se este é o local ideal para 
 			// invocar o logging...
-			Logger.addEntry(" "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - "+
-							"\nRequirer: "+requester+"  -  Provider: "+provider+
-							"\n - Exception: RuntimeException",false);
-						
-			System.out.println("RUNTIME EXCEPTION!!! ");
-			e.printStackTrace();
-			
+			LOG.error("ERROR Invoking "+organization+"."+service+" - Timing: "+(endTime-startTime)+"ms - Requirer: "+requester+"  -  Provider: "+provider+" - Exception: RuntimeException",false);
+												
 			throw new ServiceException("Service threw a Runtime Exception",e);
 		}
 		

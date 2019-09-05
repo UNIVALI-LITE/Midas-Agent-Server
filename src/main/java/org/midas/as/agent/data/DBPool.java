@@ -53,7 +53,7 @@ public class DBPool
 	
 	/**
 	 * Returns a Database Handler for the specifiedd ado um determinado source definido 
-	 * no catálogo de estrutura.
+	 * no catalogo de estrutura.
 	 * 
 	 * @param dataSource  Data source name
 	 * 

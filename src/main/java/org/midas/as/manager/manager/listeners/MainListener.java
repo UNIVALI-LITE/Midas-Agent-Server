@@ -5,7 +5,6 @@ import org.midas.as.broker.BrokerException;
 import org.midas.as.catalog.Catalog;
 import org.midas.as.catalog.CatalogException;
 import org.midas.as.manager.ManagerException;
-import org.midas.as.manager.execution.Logger;
 import org.midas.as.manager.manager.Manager;
 import org.midas.as.manager.manager.ManagerScreen;
 
@@ -19,7 +18,7 @@ public class MainListener
 		}
 		catch (ManagerException e) 
 		{
-			Logger.addEntry("Unable to connect on MAS server, check if it�s online or if any firewall settings are blocking the communication");
+//			Logger.addEntry("Unable to connect on MAS server, check if it�s online or if any firewall settings are blocking the communication");
 			e.printStackTrace();
 		}
 	}
@@ -37,7 +36,7 @@ public class MainListener
 		}
 		catch (ManagerException e) 
 		{
-			Logger.addEntry("Unable to properly reset, disconnecting to prevent errors");
+//			Logger.addEntry("Unable to properly reset, disconnecting to prevent errors");
 			disconnect();
 		}
 	}
@@ -50,10 +49,10 @@ public class MainListener
 		}
 		catch (CatalogException e) 
 		{
-			Logger.addEntry("Unable to Refresh Catalog");		
+//			Logger.addEntry("Unable to Refresh Catalog");		
 		}
 		
-		Logger.addEntry("Catalog Successfully Refreshed.");
+//		Logger.addEntry("Catalog Successfully Refreshed.");
 		
 		if (Manager.getInstance().isConnected())
 		{
@@ -63,11 +62,11 @@ public class MainListener
 			}
 			catch (BrokerException e)
 			{
-				Logger.addEntry("Unable to propagate catalog refresh to MAS Server, disconnecting to keep consistence.");
+//				Logger.addEntry("Unable to propagate catalog refresh to MAS Server, disconnecting to keep consistence.");
 				Manager.getInstance().disconnect(false);
 			}
 			
-			Logger.addEntry("Catalog Sucessfully Updated on Mas Server.");
+//			Logger.addEntry("Catalog Sucessfully Updated on Mas Server.");
 		}
 		
 		// Atualizando Interface		
@@ -87,12 +86,12 @@ public class MainListener
 		}
 		catch(ManagerException e)
 		{
-			Logger.addEntry(e.getMessage());
+//			Logger.addEntry(e.getMessage());
 			return;
 		}
 		
 		// Atualizando Interface
-		Logger.addEntry("Agents successfully awaken");
+//		Logger.addEntry("Agents successfully awaken");
 		ManagerScreen.userInterfaceEvent("Agents Woken");	
 	}
 	
@@ -104,12 +103,12 @@ public class MainListener
 		}
 		catch (ManagerException e) 
 		{
-			Logger.addEntry(e.getMessage());
+//			Logger.addEntry(e.getMessage());
 			return;
 		}
 		
 		// Atualizando Interface
-		Logger.addEntry("Agents successfully killed.");
+//		Logger.addEntry("Agents successfully killed.");
 		ManagerScreen.userInterfaceEvent("Agents Killed");
 	}
 }

@@ -112,7 +112,7 @@ public class Factory
 		// Instancia um objeto da classe
 		Object entityObject = entityClass.newInstance();
 		
-		// Realiza um casting, guardando a referência à 
+		// Realiza um casting, guardando a referência a 
 		// entidade numa interface provedora
 		Provider entityInterface = (Provider)entityObject; 
 		

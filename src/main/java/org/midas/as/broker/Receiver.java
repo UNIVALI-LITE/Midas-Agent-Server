@@ -19,37 +19,28 @@ import javax.servlet.http.HttpServletResponse;
 import org.midas.as.manager.execution.ServiceWrapper;
 import org.midas.as.manager.execution.ServiceWrapperException;
 import org.midas.as.manager.manager.Manager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("serial")
 public class Receiver extends HttpServlet
 {
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
-	{
-		System.out.println("DoGet");
-	}
-	
-	@Override
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
-	{
-		System.out.println("DoPost");
-	}
+	private static Logger LOG = LoggerFactory.getLogger(Receiver.class);
 	
 	@Override
 	public void service(HttpServletRequest req, HttpServletResponse res) throws ServletException,IOException
 	{
-		System.out.println("DoService");
-		
-		// Recuperando Tipo da Requisi��o
+		// Recuperando Tipo da Requisição
 		String requisitionType = req.getParameter("type");
 		
-		// SE o par�metro n�o existir
+		// SE o parêmetro não existir
 		if (requisitionType == null)
 		{
-			// Lan�ando Exce��o para Requisi��o Inv�lida
+			// Lançando Exceção para Requisição Inválida
 			throw new ServletException("Invalid Requisition - Expected parameter 'type' with requisition type {provide,ping}");
 		}
 		
-		// Processando Requisi��o
+		// Processando Requisição
 		if (requisitionType.equals("provide"))
 		{
 			provideRequest(req,res);
@@ -60,7 +51,7 @@ public class Receiver extends HttpServlet
 		}
 		else
 		{
-			// Lan�ando Exce��o para Requisi��o Inv�lida
+			// Lançando Exceção para Requisição Inválida
 			throw new ServletException("Invalid Requisition - Expected parameter 'type' with requisition type {provide,ping}");
 		}		
 	}
@@ -79,7 +70,7 @@ public class Receiver extends HttpServlet
 		String  service;
 		String  organization;
 		
-		// Recuperando Entrada da Requisi��o
+		// Recuperando Entrada da Requisição
 		try
 		{
 			ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(req.getInputStream()));
@@ -107,9 +98,11 @@ public class Receiver extends HttpServlet
 			return;
 		}
 		
-		// Executando Servi�o
+		// Executando Serviço
 		try
 		{
+			LOG.info("Providing "+organization+"."+service);
+			
 			ServiceWrapper wrapper = Manager.getInstance().obtainService(organization,service,null);
 			wrapper.setParameters(in);
 			out = wrapper.run();				

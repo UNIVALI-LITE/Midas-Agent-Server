@@ -35,7 +35,7 @@ public class NativeAgentInfo extends AgentInfo
 	{
 		String aux="";
 		
-		aux+= (" Agent: "+getName()+"\n\n");
+		aux+= ("Agent: "+getName()+"\n\n");
 		aux+= ("Protocol: \n - ");
 		aux+= (getProtocol()+"\n\n");
 		aux+= ("Package: \n - ");

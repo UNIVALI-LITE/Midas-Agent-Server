@@ -12,9 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.midas.as.catalog.Catalog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Sender
 {	
+	private static Logger LOG = LoggerFactory.getLogger(Receiver.class);
+	
 	public static boolean pingServer()
 	{					
 		try
@@ -84,6 +88,8 @@ public class Sender
 	{
 		try 
 		{
+			LOG.info("Requiring "+organization+"."+service);
+			
 			URL url = new URL("http://"+Catalog.getContainerInfo().getServerAddress()+":"+Catalog.getContainerInfo().getServerPort()+"/masserver/trader?type=provide");
 			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
 				

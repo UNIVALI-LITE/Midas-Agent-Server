@@ -1,13 +1,13 @@
 package org.midas.as.agent.board;
 
 /**
- *	This class represents a Message. A message it´s written by an {@link Agent}
- *	on the {@link Board}, adressed to a determined group. The Board notifies 
+ *	This class represents a Message. A message is written by an {@link Agent}
+ *	on the {@link Board}, then adressed to a determined group. The Board notifies 
  *	other Agents which have declared their interest on the target group.
  *  A message has several items:
  *	<ul>
  *	<li> The date it was written </li>
- *	<li> It´s priority level </li>
+ *	<li> It's priority level </li>
  *	<li> The group it was destinated </li>
  *	<li> The Agent that wrote it </li>
  *	<li> A textual content </li>
@@ -127,7 +127,7 @@ public class Message
 	public Message[] getMessageByDataPiece(Message[] msgs, String piecekey) 
 	{
 		//Usar int String.lastIndexOf(String str) ou boolean regionMatches(int toffset, String other, int ooffset, int len)
-		//Para verificar se a chave corresponde a um pedaçao do campo "String data"
+		//Para verificar se a chave corresponde a um pedaço do campo "String data"
         return msgs;
 	}
 
