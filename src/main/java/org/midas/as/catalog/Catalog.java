@@ -118,11 +118,11 @@ public class Catalog
 		}		
 	}
 
-	public static void loadCatalog() throws CatalogException
+	public static void loadCatalog(String structureXML, String servicesXML) throws CatalogException
 	{
 		try
 		{
-			Parser.parse();				
+			Parser.parse(structureXML, servicesXML);				
 		}
 		catch(ParserException e)
 		{

@@ -10,12 +10,12 @@ public class AgentServer
 {
 	private static Logger LOG = LoggerFactory.getLogger(AgentServer.class);
 	
-	public static void initialize()
+	public static void initialize(String structureXML, String servicesXML)
 	{
-		initialize(true,true);
+		initialize(true,true, structureXML, servicesXML);
 	}
 	
-	public static void initialize(boolean online,boolean wakeAgents) 
+	public static void initialize(boolean online,boolean wakeAgents, String structureXML, String servicesXML) 
 	{
 		LOG.info(" __  __  ___  ____     _     ____               _     ____ ");
 		LOG.info("|  \\/  ||_ _||  _ \\   / \\   / ___|             / \\   / ___| ");
@@ -27,7 +27,7 @@ public class AgentServer
 		try
 		{
 			LOG.info("Initializing Agent Server");
-			Manager.getInstance().initialize();
+			Manager.getInstance().initialize(structureXML, servicesXML);
 			
 			if (online)
 			{
@@ -43,7 +43,7 @@ public class AgentServer
 		}
 		catch(ManagerException e)
 		{
-			LOG.error("Could not initialize AgentServer");
+			LOG.error("Could not initialize AgentServer", e);
 		}
 	}
 	

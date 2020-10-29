@@ -41,11 +41,11 @@ public class MainListener
 		}
 	}
 	
-	public void refreshCatalog()
+	public void refreshCatalog(String structureXML, String servicesXML)
 	{
 		try 
 		{
-			Catalog.loadCatalog();
+			Catalog.loadCatalog(structureXML, servicesXML);
 		}
 		catch (CatalogException e) 
 		{

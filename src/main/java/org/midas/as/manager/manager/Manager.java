@@ -80,12 +80,12 @@ public class Manager
 	 * recuperar a lista de serviços, o URL do servidor, e o nome do MAS 
 	 * e do modelo de mensagens para efetivar o cadastramento do MAS no TS.
 	 */
-	public void initialize() throws ManagerException
+	public void initialize(String structureXML, String servicesXML) throws ManagerException
 	{		
 		// 1. Carrega o catálogo
 		try
 		{
-			Catalog.loadCatalog();
+			Catalog.loadCatalog(structureXML, servicesXML);
 		}
 		catch(CatalogException e)
 		{
