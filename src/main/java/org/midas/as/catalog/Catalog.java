@@ -5,6 +5,7 @@
 
 package org.midas.as.catalog;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.midas.metainfo.ContainerInfo;
@@ -148,7 +149,11 @@ public class Catalog
 	
 	public static void setServices(Map<String,ServiceInfo> services) 
 	{
-		Catalog.services = services;
+		if(Catalog.services == null)
+		{
+			Catalog.services = new HashMap<String,ServiceInfo>();
+		}
+		Catalog.services.putAll(services);
 	}
 	
 	public static Map<String,String[]> getDataSources() 
