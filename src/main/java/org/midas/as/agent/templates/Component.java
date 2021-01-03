@@ -16,7 +16,7 @@ import java.util.Map;
  * that provides support and data funcionality to the agents. 
  */
 public abstract class Component implements Provider 
-{	
+{
 	/**
 	 * Abstract method that acts as the providing interface for the components services, 
 	 * must be implemented by the concrete component class.
@@ -26,6 +26,6 @@ public abstract class Component implements Provider
 	 * @param out  List used to return information back to the requirer
 	 * 
 	 * @throws ServiceException  in case any processing error occurs
-	 */	
+	 */
 	public abstract void provide(String service, Map in, List out) throws ServiceException;		
 }

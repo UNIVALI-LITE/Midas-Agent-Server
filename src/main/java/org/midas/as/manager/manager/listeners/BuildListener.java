@@ -6,6 +6,6 @@ public class BuildListener
 {		
 	public void displayDetails(Object selection)
 	{
-		ManagerScreen.refreshBuildDetails(selection);
+		//ManagerScreen.refreshBuildDetails(selection);
 	}
 }

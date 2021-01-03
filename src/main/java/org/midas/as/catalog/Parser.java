@@ -51,11 +51,14 @@ public class Parser
 	 * objetos as informacoes contidas nos n�s do documento. Os objetos 
 	 * recuperados do documento XML s�o armazenados em um HashMap. 
 	 */
-	public static synchronized void parse(String structureXML, String servicesXML) throws ParserException
+	public static synchronized String parse(String structureXML, String servicesXML) throws ParserException
 	{
 		// Inicializando Vari�veis do Catalog
 		Document 	  doc;
 		ContainerInfo containerInfo;
+		String serverAddress;
+		String serverPort;
+		String containerPort;
 		
 		Map<String,ServiceInfo> services    = new HashMap<String,ServiceInfo>();
 		Map<String,String[]>    dataSources = new HashMap<String,String[]>();
@@ -78,10 +81,10 @@ public class Parser
 			String containerPath      = new File("").getAbsolutePath();						
 			
 			String containerAddress	  = InetAddress.getLocalHost().getHostAddress();
-			String containerPort	  = getChildTagValue( tagContainer, "localPort");
+			containerPort	  = getChildTagValue( tagContainer, "localPort");
 			
-			String serverAddress 	  = getChildTagValue( tagContainer, "serverAddress" );
-			String serverPort 		  = getChildTagValue( tagContainer, "serverPort" );																		
+			serverAddress 	  = getChildTagValue( tagContainer, "serverAddress" );
+			serverPort 		  = getChildTagValue( tagContainer, "serverPort" );																		
 				
 			// Construindo Carregador de Classes
 			String containerClassPath = ".";
@@ -348,7 +351,7 @@ public class Parser
 					}
 					
 					// Adicionado a Entity
-					ServiceInfo service = new ServiceInfo(serviceName,path,serviceScope,description,entity);
+					ServiceInfo service = new ServiceInfo(serviceName,path,serviceScope,description, containerPort ,entity);
 					entity.addService(service);
 					
 					// Adicionando ao Cat�logo
@@ -408,7 +411,10 @@ public class Parser
 		// Setando Catalog
 		Catalog.setServices(services);
 		Catalog.setDataSources(dataSources);
-		Catalog.setContainerInfo(containerInfo);
+		Catalog.setContainerInfos(containerPort, containerInfo);
+		Catalog.setServerAddress(serverAddress);
+		Catalog.setServerPort(serverPort);
+		return containerPort;
     }	
 	
 	/**
@@ -497,7 +503,6 @@ public class Parser
     	{
     		throw new ParserException("Invalid TAG - "+tagName);
     	}
-    	
     	return child.getFirstChild().getNodeValue();
   	}
 }

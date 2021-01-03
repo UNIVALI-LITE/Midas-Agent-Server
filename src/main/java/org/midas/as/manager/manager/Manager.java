@@ -50,9 +50,9 @@ public class Manager
 	private static List<FutureTask>  	  standAloneTasks 	  = new ArrayList<FutureTask>(10);
 	private static ExecutorService 		  standAloneTasksPool = Executors.newFixedThreadPool(1);
 		
-	private static Map<String,Agent>   			  lifeCycleAgents	  = new HashMap<String,Agent>(); 
-	private static Map<String,FutureTask<Object>> lifeCycleTasks      = new HashMap<String,FutureTask<Object>>();
-	private static ExecutorService 		  		  lifeCycleTasksPool  = Executors.newCachedThreadPool();
+	public static Map<String,Agent>   			  lifeCycleAgents	  = new HashMap<String,Agent>(); 
+	public static Map<String,FutureTask<Object>> lifeCycleTasks      = new HashMap<String,FutureTask<Object>>();
+	public static ExecutorService 		  		  lifeCycleTasksPool  = Executors.newCachedThreadPool();
 			
 	/**
 	 * Construtor privado para forçar o uso do padrão singleton
@@ -80,18 +80,18 @@ public class Manager
 	 * recuperar a lista de serviços, o URL do servidor, e o nome do MAS 
 	 * e do modelo de mensagens para efetivar o cadastramento do MAS no TS.
 	 */
-	public void initialize(String structureXML, String servicesXML) throws ManagerException
+	public String initialize(String structureXML, String servicesXML) throws ManagerException
 	{		
 		// 1. Carrega o catálogo
+		String port;
 		try
 		{
-			Catalog.loadCatalog(structureXML, servicesXML);
+			port = Catalog.loadCatalog(structureXML, servicesXML);
 		}
 		catch(CatalogException e)
 		{
 			throw new ManagerException("Unable to load catalog",e);			
 		}
-		
 		// 2. Carrega o Board
 		Board.initializeBoard();
 				
@@ -110,8 +110,8 @@ public class Manager
 		
 		try
 		{
-			Integer port = Integer.valueOf(Catalog.getContainerInfo().getContainerPort());
-			Server server = new Server(port);
+			Integer serverPort = Integer.valueOf(Catalog.getContainerInfos(port).getContainerPort());
+			Server server = new Server(serverPort);
 			
 			ServletHandler handler = new ServletHandler();
 	        server.setHandler(handler);
@@ -121,16 +121,18 @@ public class Manager
 		}
 		catch (Exception e) 
 		{
-			throw new ManagerException("Unable to start Jetty, check that port "+Catalog.getContainerInfo().getContainerPort()+" is free.",e);
-		}		
+			throw new ManagerException("Unable to start Jetty, check that port "+Catalog.getContainerInfos(port).getContainerPort()+" is free.",e);
+		}
+
+		return port;
 	}
 	
-	public void connect() throws ManagerException
+	public void connect(String port) throws ManagerException
 	{
 		// 1. Registrando no MAS
 		try 
 		{
-			Broker.registerOnServer();
+			Broker.registerOnServer(port);
 		} 
 		catch (BrokerException e) 
 		{
@@ -138,7 +140,7 @@ public class Manager
 		}
 				
 		// 3. Inicializando tarefas online
-		onlineTasks.add(new FutureTask<Object>(new SynchronizerTask()));
+		onlineTasks.add(new FutureTask<Object>(new SynchronizerTask(port)));
 								
 		// 4. Disparando tarefas online
 		for (FutureTask task : onlineTasks)
@@ -150,11 +152,11 @@ public class Manager
 		connected = true;
 		
 		// 6. Atualizando Interface com o Usuário		
-		ManagerScreen.userInterfaceEvent("Connected");				
+		//ManagerScreen.userInterfaceEvent("Connected");				
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void disconnect(boolean intentional)
+	public void disconnect(String port, boolean intentional)
 	{		
 		// 1. Atualizando variáveis de estado
 		stopping=true;
@@ -167,7 +169,7 @@ public class Manager
 			LOG.warn("Disconnected from server");
 		
 		// 3. Atualizando Interface com o Usuário		
-		ManagerScreen.userInterfaceEvent("Disconnected");
+		//ManagerScreen.userInterfaceEvent("Disconnected");
 		
 		// 4. Terminando tarefas online
 		for (FutureTask task : onlineTasks)
@@ -177,17 +179,17 @@ public class Manager
 		}
 	}	
 	
-	public void reset() throws ManagerException
+	public void reset(String port) throws ManagerException
 	{
-		disconnect(true);
-		connect();		
+		disconnect(port, true);
+		connect(port);		
 	}
 		
 	@SuppressWarnings("rawtypes")
-	public void wakeAgents() throws ManagerException
+	public void wakeAgents(String port) throws ManagerException
 	{
 		// 1. Inicializa Ciclo de Vida dos Agentes
-		Set<OrganizationInfo> orgs = Catalog.getContainerInfo().getOrganizations();
+		Set<OrganizationInfo> orgs = Catalog.getContainerInfos(port).getOrganizations();
 		
 		for (OrganizationInfo org : orgs)
 		{
@@ -204,11 +206,11 @@ public class Manager
 					
 					try
 					{
-						Agent agent = (Agent)(Factory.getInstance().instantiateEntity(orgPackage+"."+entPackage+"."+entClassName));
+						Agent agent = (Agent)(Factory.getInstance().instantiateEntity(orgPackage+"."+entPackage+"."+entClassName, port));
 						lifeCycleAgents.put(agent.getClass().toString().substring(6),agent);
 						lifeCycleTasks.put(agent.getClass().toString().substring(6),new FutureTask<Object>(agent));										
 						
-						LOG.info("Waking "+agent.getClass().getSimpleName());
+						LOG.info("Waking "+agent.getClass().getSimpleName()+"on port "+port);
 					}
 					catch (Exception e)
 					{	

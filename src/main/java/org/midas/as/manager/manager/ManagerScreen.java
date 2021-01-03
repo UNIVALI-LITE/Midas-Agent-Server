@@ -56,7 +56,7 @@ public class ManagerScreen
 	private static Image organizationIcon;
 	
 	
-	public static void show() throws ManagerException
+	public static void show(String port) throws ManagerException
 	{
 		// 1. Montando Tela de Visualiza��o
 		thinlet = new Thinlet();
@@ -64,7 +64,7 @@ public class ManagerScreen
 		try 
 		{			
 			// 2. Renderizando Arquivos XUL
-			mainScreen  = thinlet.parse("/org/midas/as/manager/manager/screens/main.xul",new MainListener());
+			mainScreen  = thinlet.parse("/org/midas/as/manager/manager/screens/main.xul",new MainListener(port));
 			viewScreen  = thinlet.parse("/org/midas/as/manager/manager/screens/view.xul",new ViewListener());
 			buildScreen = thinlet.parse("/org/midas/as/manager/manager/screens/build.xul",new BuildListener());
 						
@@ -99,7 +99,7 @@ public class ManagerScreen
 					folderIcon = tk.getImage(folderIconFile);					
 				}
 				
-				userInterfaceEvent("Refresh Services");			
+				userInterfaceEvent(port, "Refresh Services");			
 			}									
 		}
 		catch (IOException e) 
@@ -108,14 +108,14 @@ public class ManagerScreen
 		}				
 	}
 	
-	public static void userInterfaceEvent(String event)
+	public static void userInterfaceEvent(String port, String event)
 	{
 		if (!hidden)
 		{
 			if (event.equals("Refresh Services"))
 			{
-				refreshServices();
-				refreshDetails();
+				refreshServices(port);
+				refreshDetails(port);
 			}		
 			else if (event.equals("Refresh Logger"))
 			{
@@ -127,11 +127,11 @@ public class ManagerScreen
 			}
 			else if (event.equals("Refresh Details"))
 			{
-				refreshDetails();
+				refreshDetails(port);
 			}
 			else if (event.equals("Connected"))
 			{
-				String path = Catalog.getContainerInfo().getPath();
+				String path = Catalog.getContainerInfos(port).getPath();
 				
 				// Verifica se os �cones j� foram carregados
 				if (organizationIcon == null)
@@ -153,8 +153,8 @@ public class ManagerScreen
 			}
 			else if (event.equals("Disconnected"))
 			{
-				refreshDetails();
-				refreshServices();				
+				refreshDetails(port);
+				refreshServices(port);				
 				refreshStatistics();
 				refreshConnection();
 			}
@@ -177,7 +177,7 @@ public class ManagerScreen
 		}
 	}
 	
-	public static void refreshBuildDetails(Object select) 
+	public static void refreshBuildDetails(String port, Object select) 
 	{
 		if (hidden)
 		{
@@ -231,8 +231,8 @@ public class ManagerScreen
 			// Preenchendo o Painel			
 			if (selection!=null && !selection[0].equals("folder"))
 			{			
-				ContainerInfo    ci = Catalog.getContainerInfo();
-				OrganizationInfo oi = Catalog.getOrganizationByName(selection[1]);
+				ContainerInfo    ci = Catalog.getContainerInfos(port);
+				OrganizationInfo oi = Catalog.getOrganizationByName(port, selection[1]);
 				
 				thinlet.setString(containerNameField,"text",ci.getName());
 				thinlet.setString(containerPathField,"text",ci.getPath());
@@ -244,7 +244,7 @@ public class ManagerScreen
 				
 				if (selection[0].equals("entity"))
 				{
-					EntityInfo ei = Catalog.getEntityByName(selection[1],selection[2]);
+					EntityInfo ei = Catalog.getEntityByName(port, selection[1],selection[2]);
 					
 					thinlet.setString(entityComboBox,"text",ei.getName());
 					thinlet.setString(entityProtocolComboBox,"text",ei.getProtocol());
@@ -297,7 +297,7 @@ public class ManagerScreen
 		}
 	}
 	
-	public static void notifyUser(String message, boolean success)
+	public static void notifyUser(String port, String message, boolean success)
 	{
 		if (!hidden)
 		{
@@ -306,11 +306,11 @@ public class ManagerScreen
 			
 			if (success)
 			{
-				thinlet.setIcon(logEntry,"icon",tk.getImage(Catalog.getContainerInfo().getPath()+"/images/serviceOk.gif"));
+				thinlet.setIcon(logEntry,"icon",tk.getImage(Catalog.getContainerInfos(port).getPath()+"/images/serviceOk.gif"));
 			}
 			else
 			{
-				thinlet.setIcon(logEntry,"icon",tk.getImage(Catalog.getContainerInfo().getPath()+"/images/serviceError.gif"));
+				thinlet.setIcon(logEntry,"icon",tk.getImage(Catalog.getContainerInfos(port).getPath()+"/images/serviceError.gif"));
 			}
 			
 			thinlet.setString(logEntry,"text",new GregorianCalendar().getTime()+" | "+message);			
@@ -322,7 +322,7 @@ public class ManagerScreen
 		}	
 	}
 			
-	private static void refreshDetails()
+	private static void refreshDetails(String port)
 	{
 		if (hidden)
 		{
@@ -363,7 +363,7 @@ public class ManagerScreen
 			{				
 				try 
 				{
-					organization = Catalog.getOrganizationByName(selection[1]);
+					organization = Catalog.getOrganizationByName(port, selection[1]);
 					
 					if (selection[0].equals("organization"))
 					{
@@ -371,7 +371,7 @@ public class ManagerScreen
 					}
 					else if (selection[0].equals("entity"))
 					{
-						entity = Catalog.getEntityByName(organization.getName(),selection[2]);
+						entity = Catalog.getEntityByName(port, organization.getName(),selection[2]);
 						info   = entity.toString();
 					}
 					else if (selection[0].equals("service"))
@@ -401,7 +401,7 @@ public class ManagerScreen
 		}
 	}
 	
-	private static void refreshServices()
+	private static void refreshServices(String port)
 	{
 		if (hidden)
 		{
@@ -443,7 +443,7 @@ public class ManagerScreen
 			if ((thinlet.getBoolean(thinletStyleSelection,"selected")))
 			{
 				// Varrendo Organiza��es
-				organizations = Catalog.getContainerInfo().getOrganizations();
+				organizations = Catalog.getContainerInfos(port).getOrganizations();
 					
 				for (Iterator iter = organizations.iterator();iter.hasNext();)
 				{
@@ -547,7 +547,7 @@ public class ManagerScreen
 			}	
 			
 			// Preenchendo �rvore de Constru��o
-			organizations = Catalog.getContainerInfo().getOrganizations();
+			organizations = Catalog.getContainerInfos(port).getOrganizations();
 				
 			for (Iterator iter = organizations.iterator();iter.hasNext();)
 			{

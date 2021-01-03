@@ -27,18 +27,18 @@ public class AgentServer
 		try
 		{
 			LOG.info("Initializing Agent Server");
-			Manager.getInstance().initialize(structureXML, servicesXML);
+			String port = Manager.getInstance().initialize(structureXML, servicesXML);
 			
 			if (online)
 			{
 				LOG.info("Connecting to MAS Server");
-				Manager.getInstance().connect();
+				Manager.getInstance().connect(port);
 			}
 			
 			if (wakeAgents)
 			{
-				LOG.info("Starting Agents");
-				Manager.getInstance().wakeAgents();
+				LOG.info("Starting Agents on port: "+port);
+				Manager.getInstance().wakeAgents(port);
 			}
 		}
 		catch(ManagerException e)

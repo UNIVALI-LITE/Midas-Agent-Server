@@ -6,7 +6,13 @@ import org.midas.as.broker.Broker;
 import org.midas.as.manager.manager.Manager;
 
 public class SynchronizerTask implements Callable<Object>
-{	
+{
+	private final String port;
+
+	public SynchronizerTask(String port) {
+		this.port = port;
+	}
+
 	// TODO - Modificar o codigo para tentar reconectar sempre
 	public Object call() 
 	{
@@ -19,13 +25,13 @@ public class SynchronizerTask implements Callable<Object>
 				Thread.sleep(2000);
 			}			
 			
-			Manager.getInstance().disconnect(false);
+			Manager.getInstance().disconnect(port, false);
 		} 
 		catch (InterruptedException e) 
 		{
 			if(!Manager.getInstance().isStopping())
 			{
-				Manager.getInstance().disconnect(false);
+				Manager.getInstance().disconnect(port, false);
 			}			
 		}				
 		

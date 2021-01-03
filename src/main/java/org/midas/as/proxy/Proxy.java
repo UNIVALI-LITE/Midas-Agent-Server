@@ -86,7 +86,7 @@ public class Proxy
     	Factory.getInstance().invokeEntity(organization,service,in,out);
   	}
 	
-	public void require(String organization,String service, Map in, List out) throws ProxyException,ServiceException
+	public void require(String organization,String service, Map in, List out, String requesterName) throws ProxyException,ServiceException
 	{		
 		if (Catalog.hasService(organization,service))
 		{
@@ -121,7 +121,7 @@ public class Proxy
 		{
 			try
 			{
-				Broker.getInstance().require(organization,service,in,out);
+				Broker.getInstance().require(organization,service,in,out, requesterName);
 			}
 			catch (BrokerException e)
 			{
