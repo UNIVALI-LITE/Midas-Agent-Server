@@ -174,6 +174,11 @@ public class Catalog
 	// 	Catalog.containerInfo = asInfo;
 	// }
 
+	public static void removeContainer(String port)
+	{
+		containerInfos.remove(port);
+	}
+
 	public static ContainerInfo getContainerInfos(String port)
 	{
 		return containerInfos.get(port);

@@ -31,7 +31,12 @@ public class MainListener
 	
 	public void disconnect()
 	{
-		Manager.getInstance().disconnect(port, true);
+		try {
+			Manager.getInstance().disconnect(port, true);
+		} catch (ManagerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void reset()
@@ -69,7 +74,12 @@ public class MainListener
 			catch (BrokerException e)
 			{
 //				Logger.addEntry("Unable to propagate catalog refresh to MAS Server, disconnecting to keep consistence.");
-				Manager.getInstance().disconnect(port, false);
+				try {
+					Manager.getInstance().disconnect(port, false);
+				} catch (ManagerException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 //			Logger.addEntry("Catalog Sucessfully Updated on Mas Server.");

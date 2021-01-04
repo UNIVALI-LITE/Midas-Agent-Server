@@ -104,9 +104,9 @@ public class Factory {
 		// Instancia um objeto da classe
 		Object entityObject = entityClass.getDeclaredConstructor().newInstance();
 
-		if(Manager.lifeCycleAgents.containsKey(entityObject.getClass().toString().substring(6)))
+		if(Manager.lifeCycleAgents.containsKey(entityObject.getClass().toString().substring(6)+port))
 		{
-			return Manager.lifeCycleAgents.get(entityObject.getClass().toString().substring(6));
+			return Manager.lifeCycleAgents.get(entityObject.getClass().toString().substring(6)+port);
 		}
 
 		if(entityObject instanceof Agent)

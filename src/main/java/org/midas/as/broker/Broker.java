@@ -38,6 +38,11 @@ public class Broker
 		Sender.registerOnServer(port);
 	}
 
+	public static void deregisterOnServer(String port) throws BrokerException
+	{				
+		Sender.deregisterOnServer(port);
+	}
+
 	public static boolean checkServerForService(String organization, String service) throws BrokerException
 	{
 		return(Sender.checkServerForService(organization,service));

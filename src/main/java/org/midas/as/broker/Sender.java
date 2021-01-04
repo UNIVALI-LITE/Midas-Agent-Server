@@ -83,6 +83,41 @@ public class Sender
 			throw new BrokerException("Error on data transfer to server",e);
 		} 
 	}
+			
+	public static void deregisterOnServer(String port) throws BrokerException
+	{				
+		try 
+		{
+			URL url = new URL("http://"+Catalog.getServerAddress()+":"+Catalog.getServerPort()+"/masserver/trader?type=deregister");
+			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
+				
+			uc.setRequestProperty("Content-Type", "application/octet-stream");
+			
+			uc.setDoOutput(true);
+			uc.setDoInput(true);
+			uc.setUseCaches(false);
+									         
+			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(uc.getOutputStream()));		    
+			out.writeObject(Catalog.getContainerInfos(port));	
+			
+			out.flush();
+			out.close();
+			
+			ObjectInputStream in =	new ObjectInputStream(new BufferedInputStream(uc.getInputStream()));
+				
+			in.close();
+			
+			uc.disconnect();			
+		} 
+		catch (MalformedURLException e) 
+		{		
+			throw new BrokerException("Invalid Server URL",e);
+		}
+		catch (IOException e) 
+		{			
+			throw new BrokerException("Error on data transfer to server",e);
+		} 
+	}
 
 	public static void requireServer(String organization, String service, Map in, List out, String requesterName) throws BrokerException
 	{
