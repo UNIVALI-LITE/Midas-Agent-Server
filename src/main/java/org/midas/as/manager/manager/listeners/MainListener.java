@@ -111,11 +111,11 @@ public class MainListener
 		//ManagerScreen.userInterfaceEvent("Agents Woken");	
 	}
 	
-	public void killAgents()
+	public void killAgents(String port)
 	{
 		try 
 		{
-			Manager.getInstance().killAgents();
+			Manager.getInstance().killAgents(port);
 		}
 		catch (ManagerException e) 
 		{

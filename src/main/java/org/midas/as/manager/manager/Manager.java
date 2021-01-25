@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
@@ -165,7 +166,8 @@ public class Manager {
 		// 3. Atualizando Interface com o Usuário
 		// ManagerScreen.userInterfaceEvent("Disconnected");
 		
-		//removendo agentes instanciados
+		//mata e removendo agentes instanciados
+		killAgents(port);
 		removeAgents(port);
 
 		//parando servidor
@@ -275,11 +277,13 @@ public class Manager {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public void killAgents() throws ManagerException
+	public void killAgents(String port) throws ManagerException
 	{
-		for (Agent agent : lifeCycleAgents.values())
-		{				
-			agent.alive = false;
+		for (Entry<String,Agent> agent : lifeCycleAgents.entrySet()) {
+			if(agent.getKey().contains(port))
+			{
+				agent.getValue().alive = false;
+			}
 		}
 		
 		try 
@@ -290,24 +294,28 @@ public class Manager {
 		{		
 			e.printStackTrace();
 		}
-		
-		for (FutureTask task : lifeCycleTasks.values())
-		{
-			if (!task.isDone())
+
+		for (Entry<String,FutureTask<Object>> task : lifeCycleTasks.entrySet()) {
+			if(task.getKey().contains(port))
 			{
-				task.cancel(true);
+				if (!task.getValue().isDone())
+				{
+					task.getValue().cancel(true);
+				}
 			}
 		}
 		
-		for (FutureTask task : lifeCycleTasks.values())
-		{
-			if (!(task.isDone()||task.isCancelled()))
+		for (Entry<String,FutureTask<Object>> task : lifeCycleTasks.entrySet()) {
+			if(task.getKey().contains(port))
 			{
-				// TODO: Melhorar espefica��o do erro
-				throw new ManagerException("Unable to terminate all the agents, please re-start the container, and check the lyfe-cycle implementations.");
+				if (!(task.getValue().isDone()||task.getValue().isCancelled()))
+				{
+					// TODO: Melhorar espefica��o do erro
+					throw new ManagerException("Unable to terminate all the agents, please re-start the container, and check the lyfe-cycle implementations.");
+				}
 			}
 		}
-		
+
 		agentsAlive = false;
 	}
 	
