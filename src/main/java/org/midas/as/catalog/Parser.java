@@ -7,6 +7,7 @@ package org.midas.as.catalog;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ import org.midas.metainfo.WebServiceComponentInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 
@@ -49,18 +51,21 @@ public class Parser
 	 * objetos as informacoes contidas nos n�s do documento. Os objetos 
 	 * recuperados do documento XML s�o armazenados em um HashMap. 
 	 */
-	public static synchronized void parse() throws ParserException
+	public static synchronized String parse(String structureXML, String servicesXML) throws ParserException
 	{
 		// Inicializando Vari�veis do Catalog
 		Document 	  doc;
 		ContainerInfo containerInfo;
+		String serverAddress;
+		String serverPort;
+		String containerPort;
 		
 		Map<String,ServiceInfo> services    = new HashMap<String,ServiceInfo>();
 		Map<String,String[]>    dataSources = new HashMap<String,String[]>();
 								
 		// Carregando documento XML
-		doc = loadDocument("structure.xml");
-		
+		//doc = loadDocument("structure.xml");
+		doc = convertStringToDocument(structureXML);
 		// Varrendo o Documento e Montando a Estrutura
 		try
 		{
@@ -76,10 +81,10 @@ public class Parser
 			String containerPath      = new File("").getAbsolutePath();						
 			
 			String containerAddress	  = InetAddress.getLocalHost().getHostAddress();
-			String containerPort	  = getChildTagValue( tagContainer, "localPort");
+			containerPort	  = getChildTagValue( tagContainer, "localPort");
 			
-			String serverAddress 	  = getChildTagValue( tagContainer, "serverAddress" );
-			String serverPort 		  = getChildTagValue( tagContainer, "serverPort" );																		
+			serverAddress 	  = getChildTagValue( tagContainer, "serverAddress" );
+			serverPort 		  = getChildTagValue( tagContainer, "serverPort" );																		
 				
 			// Construindo Carregador de Classes
 			String containerClassPath = ".";
@@ -275,7 +280,8 @@ public class Parser
 		} 
 						
 		// Carregando documento XML
-		doc = loadDocument("services.xml");
+		//doc = loadDocument("services.xml");
+		doc = convertStringToDocument(servicesXML);
 			
 		try
 		{
@@ -345,7 +351,7 @@ public class Parser
 					}
 					
 					// Adicionado a Entity
-					ServiceInfo service = new ServiceInfo(serviceName,path,serviceScope,description,entity);
+					ServiceInfo service = new ServiceInfo(serviceName,path,serviceScope,description, containerPort ,entity);
 					entity.addService(service);
 					
 					// Adicionando ao Cat�logo
@@ -405,7 +411,10 @@ public class Parser
 		// Setando Catalog
 		Catalog.setServices(services);
 		Catalog.setDataSources(dataSources);
-		Catalog.setContainerInfo(containerInfo);
+		Catalog.setContainerInfos(containerPort, containerInfo);
+		Catalog.setServerAddress(serverAddress);
+		Catalog.setServerPort(serverPort);
+		return containerPort;
     }	
 	
 	/**
@@ -441,6 +450,34 @@ public class Parser
 		
 		return doc;
 	}
+
+	/**
+	 * este metodo recupera o conteudo das tags dos n�s requeridos usando 
+	 * o metodo getElementByTagName do DOM, que capura o conteudo da tag
+	 * akjsallakjs
+	 */
+	private static Document convertStringToDocument(String xmlStr) throws ParserException  {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+        DocumentBuilder builder;  
+        try  
+        {  
+            builder = factory.newDocumentBuilder();  
+            Document doc = builder.parse( new InputSource( new StringReader( xmlStr ) ) ); 
+            return doc;
+		}
+		catch (ParserConfigurationException e)
+		{
+			throw new ParserException("Unexpected behavior from parsing driver",e);			
+		} 
+		catch (SAXException e) 
+		{
+			throw new ParserException("Malformed XML file - "+xmlStr,e);			
+		} 
+		catch (IOException e) 
+		{
+			throw new ParserException("Unable to find XML file - "+xmlStr,e);			
+		}
+    }
 	
 	/**
 	 * este metodo recupera o conteudo das tags dos n�s requeridos usando 
@@ -466,7 +503,6 @@ public class Parser
     	{
     		throw new ParserException("Invalid TAG - "+tagName);
     	}
-    	
     	return child.getFirstChild().getNodeValue();
   	}
 }

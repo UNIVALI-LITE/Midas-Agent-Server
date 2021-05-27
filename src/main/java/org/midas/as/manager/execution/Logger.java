@@ -29,6 +29,6 @@ public class Logger
 	 */
 	public static void addEntry(String entry, boolean success)
 	{
-		ManagerScreen.notifyUser(entry,success);		
+		//ManagerScreen.notifyUser(entry,success);		
 	}
 }

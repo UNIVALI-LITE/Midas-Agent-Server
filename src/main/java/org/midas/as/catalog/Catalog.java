@@ -5,6 +5,7 @@
 
 package org.midas.as.catalog;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.midas.metainfo.ContainerInfo;
@@ -18,9 +19,13 @@ import org.midas.metainfo.ServiceInfo;
 public class Catalog 
 {
 	// TODO: Verificar Possível uso de Exceções Personalizadas nos Gets
+
+	private static String serverAddress;
+	private static String serverPort;
 		
 	// Variável que guarda os Meta Dados de um Agent Server
-	private static ContainerInfo containerInfo;
+	// private static ContainerInfo containerInfo;
+	private static Map<String, ContainerInfo> containerInfos = new HashMap<>();
 		
 	// HashMap que serve de indíce para os data sources
 	// Key   = Nome do data source
@@ -78,16 +83,28 @@ public class Catalog
 		return (getServiceByName(organizationName,serviceName)).getPath();
 	}		
 	
-	public static OrganizationInfo getOrganizationByName(String organizationName) 
+	// public static OrganizationInfo getOrganizationByName(String organizationName) 
+	// 	throws MetaInfoException
+	// {
+	// 	return (containerInfo.getOrganizationByName(organizationName));
+	// }
+	
+	// public static EntityInfo getEntityByName(String organizationName,String entityName) 
+	// 	throws MetaInfoException 
+	// {
+	// 	return (containerInfo.getOrganizationByName(organizationName).getEntityByName(entityName));
+	// }
+
+	public static OrganizationInfo getOrganizationByName(String port, String organizationName) 
 		throws MetaInfoException
 	{
-		return (containerInfo.getOrganizationByName(organizationName));
+		return (containerInfos.get(port).getOrganizationByName(organizationName));
 	}
 	
-	public static EntityInfo getEntityByName(String organizationName,String entityName) 
+	public static EntityInfo getEntityByName(String port, String organizationName,String entityName) 
 		throws MetaInfoException 
 	{
-		return (containerInfo.getOrganizationByName(organizationName).getEntityByName(entityName));
+		return (containerInfos.get(port).getOrganizationByName(organizationName).getEntityByName(entityName));
 	}
 	
 	public static EntityInfo getEntityByService(String organizationName,String serviceName) 
@@ -118,11 +135,11 @@ public class Catalog
 		}		
 	}
 
-	public static void loadCatalog() throws CatalogException
+	public static String loadCatalog(String structureXML, String servicesXML) throws CatalogException
 	{
 		try
 		{
-			Parser.parse();				
+			return Parser.parse(structureXML, servicesXML);				
 		}
 		catch(ParserException e)
 		{
@@ -130,15 +147,46 @@ public class Catalog
 		}		
 	}
 
+	public static String getServerAddress() {
+		return Catalog.serverAddress;
+	}
+
+	public static void setServerAddress(String serverAddress) {
+		Catalog.serverAddress = serverAddress;
+	}
+
+	public static String getServerPort() {
+		return Catalog.serverPort;
+	}
+
+	public static void setServerPort(String serverPort) {
+		Catalog.serverPort = serverPort;
+	}
+
 	// Getters & Setters...		
-	public static ContainerInfo getContainerInfo()
+	// public static ContainerInfo getContainerInfo()
+	// {
+	// 	return containerInfo;
+	// }
+	
+	// public static void setContainerInfo(ContainerInfo asInfo)
+	// {
+	// 	Catalog.containerInfo = asInfo;
+	// }
+
+	public static void removeContainer(String port)
 	{
-		return containerInfo;
+		containerInfos.remove(port);
+	}
+
+	public static ContainerInfo getContainerInfos(String port)
+	{
+		return containerInfos.get(port);
 	}
 	
-	public static void setContainerInfo(ContainerInfo asInfo)
+	public static void setContainerInfos(String port, ContainerInfo asInfo)
 	{
-		Catalog.containerInfo = asInfo;
+		Catalog.containerInfos.put(port, asInfo);
 	}
 	
 	public static Map<String,ServiceInfo> getServices() 
@@ -148,7 +196,11 @@ public class Catalog
 	
 	public static void setServices(Map<String,ServiceInfo> services) 
 	{
-		Catalog.services = services;
+		if(Catalog.services == null)
+		{
+			Catalog.services = new HashMap<String,ServiceInfo>();
+		}
+		Catalog.services.putAll(services);
 	}
 	
 	public static Map<String,String[]> getDataSources() 

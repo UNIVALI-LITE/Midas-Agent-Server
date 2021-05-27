@@ -9,12 +9,18 @@ import org.midas.as.manager.manager.Manager;
 import org.midas.as.manager.manager.ManagerScreen;
 
 public class MainListener
-{		
+{	
+	public final String port;
+
+	public MainListener(String port) {
+		this.port = port;
+	}
+	
 	public void connect()
 	{
 		try 
 		{
-			Manager.getInstance().connect();
+			Manager.getInstance().connect(port);
 		}
 		catch (ManagerException e) 
 		{
@@ -25,14 +31,19 @@ public class MainListener
 	
 	public void disconnect()
 	{
-		Manager.getInstance().disconnect(true);
+		try {
+			Manager.getInstance().disconnect(port, true);
+		} catch (ManagerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public void reset()
 	{
 		try 
 		{
-			Manager.getInstance().reset();
+			Manager.getInstance().reset(port);
 		}
 		catch (ManagerException e) 
 		{
@@ -41,11 +52,11 @@ public class MainListener
 		}
 	}
 	
-	public void refreshCatalog()
+	public void refreshCatalog(String structureXML, String servicesXML)
 	{
 		try 
 		{
-			Catalog.loadCatalog();
+			Catalog.loadCatalog(structureXML, servicesXML);
 		}
 		catch (CatalogException e) 
 		{
@@ -58,19 +69,24 @@ public class MainListener
 		{
 			try
 			{
-				Broker.registerOnServer();
+				Broker.registerOnServer(port);
 			}
 			catch (BrokerException e)
 			{
 //				Logger.addEntry("Unable to propagate catalog refresh to MAS Server, disconnecting to keep consistence.");
-				Manager.getInstance().disconnect(false);
+				try {
+					Manager.getInstance().disconnect(port, false);
+				} catch (ManagerException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 			
 //			Logger.addEntry("Catalog Sucessfully Updated on Mas Server.");
 		}
 		
 		// Atualizando Interface		
-		ManagerScreen.userInterfaceEvent("Refresh Services");		
+		//ManagerScreen.userInterfaceEvent("Refresh Services");		
 	}
 	
 	public void exit()
@@ -82,7 +98,7 @@ public class MainListener
 	{
 		try
 		{
-			Manager.getInstance().wakeAgents();
+			Manager.getInstance().wakeAgents(port);
 		}
 		catch(ManagerException e)
 		{
@@ -92,14 +108,14 @@ public class MainListener
 		
 		// Atualizando Interface
 //		Logger.addEntry("Agents successfully awaken");
-		ManagerScreen.userInterfaceEvent("Agents Woken");	
+		//ManagerScreen.userInterfaceEvent("Agents Woken");	
 	}
 	
-	public void killAgents()
+	public void killAgents(String port)
 	{
 		try 
 		{
-			Manager.getInstance().killAgents();
+			Manager.getInstance().killAgents(port);
 		}
 		catch (ManagerException e) 
 		{
@@ -109,6 +125,6 @@ public class MainListener
 		
 		// Atualizando Interface
 //		Logger.addEntry("Agents successfully killed.");
-		ManagerScreen.userInterfaceEvent("Agents Killed");
+		//ManagerScreen.userInterfaceEvent("Agents Killed");
 	}
 }

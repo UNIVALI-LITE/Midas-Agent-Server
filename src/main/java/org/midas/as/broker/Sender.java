@@ -23,7 +23,7 @@ public class Sender
 	{					
 		try
 		{			
-			URL url = new URL("http://"+Catalog.getContainerInfo().getServerAddress()+":"+Catalog.getContainerInfo().getServerPort()+"/masserver/trader?type=ping");									
+			URL url = new URL("http://"+Catalog.getServerAddress()+":"+Catalog.getServerPort()+"/masserver/trader?type=ping");									
 			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
 				
 			uc.setDoOutput(true);
@@ -49,11 +49,11 @@ public class Sender
 		} 	
 	}
 			
-	public static void registerOnServer() throws BrokerException
+	public static void registerOnServer(String port) throws BrokerException
 	{				
 		try 
 		{
-			URL url = new URL("http://"+Catalog.getContainerInfo().getServerAddress()+":"+Catalog.getContainerInfo().getServerPort()+"/masserver/trader?type=register");
+			URL url = new URL("http://"+Catalog.getServerAddress()+":"+Catalog.getServerPort()+"/masserver/trader?type=register");
 			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
 				
 			uc.setRequestProperty("Content-Type", "application/octet-stream");
@@ -63,7 +63,42 @@ public class Sender
 			uc.setUseCaches(false);
 									         
 			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(uc.getOutputStream()));		    
-			out.writeObject(Catalog.getContainerInfo());	
+			out.writeObject(Catalog.getContainerInfos(port));	
+			
+			out.flush();
+			out.close();
+			
+			ObjectInputStream in =	new ObjectInputStream(new BufferedInputStream(uc.getInputStream()));
+				
+			in.close();
+			
+			uc.disconnect();			
+		} 
+		catch (MalformedURLException e) 
+		{		
+			throw new BrokerException("Invalid Server URL",e);
+		}
+		catch (IOException e) 
+		{			
+			throw new BrokerException("Error on data transfer to server",e);
+		} 
+	}
+			
+	public static void deregisterOnServer(String port) throws BrokerException
+	{				
+		try 
+		{
+			URL url = new URL("http://"+Catalog.getServerAddress()+":"+Catalog.getServerPort()+"/masserver/trader?type=deregister");
+			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
+				
+			uc.setRequestProperty("Content-Type", "application/octet-stream");
+			
+			uc.setDoOutput(true);
+			uc.setDoInput(true);
+			uc.setUseCaches(false);
+									         
+			ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(uc.getOutputStream()));		    
+			out.writeObject(Catalog.getContainerInfos(port));	
 			
 			out.flush();
 			out.close();
@@ -84,13 +119,13 @@ public class Sender
 		} 
 	}
 
-	public static void requireServer(String organization, String service, Map in, List out) throws BrokerException
+	public static void requireServer(String organization, String service, Map in, List out, String requesterName) throws BrokerException
 	{
 		try 
 		{
 			LOG.info("Requiring "+organization+"."+service);
 			
-			URL url = new URL("http://"+Catalog.getContainerInfo().getServerAddress()+":"+Catalog.getContainerInfo().getServerPort()+"/masserver/trader?type=provide");
+			URL url = new URL("http://"+Catalog.getServerAddress()+":"+Catalog.getServerPort()+"/masserver/trader?type=provide");
 			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
 				
 			uc.setRequestProperty("Content-Type", "application/octet-stream");
@@ -100,7 +135,7 @@ public class Sender
 			uc.setUseCaches(false);
 									         
 			ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(uc.getOutputStream()));
-			oos.writeUTF(Catalog.getContainerInfo().getName());
+			oos.writeUTF(requesterName);
 			oos.writeUTF(organization);
 			oos.writeUTF(service);
 			oos.writeObject(in);	
@@ -153,7 +188,7 @@ public class Sender
 		
 		try 
 		{
-			URL url = new URL("http://"+Catalog.getContainerInfo().getServerAddress()+":"+Catalog.getContainerInfo().getServerPort()+"/masserver/trader?type=verify");
+			URL url = new URL("http://"+Catalog.getServerAddress()+":"+Catalog.getServerPort()+"/masserver/trader?type=verify");
 			HttpURLConnection uc  = (HttpURLConnection)url.openConnection();
 				
 			uc.setRequestProperty("Content-Type", "application/octet-stream");

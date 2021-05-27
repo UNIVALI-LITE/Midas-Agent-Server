@@ -6,11 +6,11 @@ public class ViewListener
 {		
 	public void updateTree()
 	{
-		ManagerScreen.userInterfaceEvent("Refresh Services");
+		//ManagerScreen.userInterfaceEvent("Refresh Services");
 	}
 	
 	public void displayDetails()
 	{
-		ManagerScreen.userInterfaceEvent("Refresh Details");
+		//ManagerScreen.userInterfaceEvent("Refresh Details");
 	}
 }

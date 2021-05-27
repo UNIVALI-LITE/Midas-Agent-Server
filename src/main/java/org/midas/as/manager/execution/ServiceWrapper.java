@@ -32,7 +32,7 @@ public class ServiceWrapper implements Callable<List>
 	
 	// Variáveis de Informação
 	private  String  provider;
-	private  String  requester;	
+	private  String  requester;
 	
 	// Variáveis de Parâmetros
 	private  Map<String,Object> in;
@@ -77,6 +77,7 @@ public class ServiceWrapper implements Callable<List>
 		{
 			provider = "remote";
 		}
+
 		
 		this.organization=organization;		
 	}
@@ -101,7 +102,7 @@ public class ServiceWrapper implements Callable<List>
 			startTime = System.currentTimeMillis();
 						
 			// Processando Serviço
-			Proxy.getInstance().require(organization,service,in,out);
+			Proxy.getInstance().require(organization,service,in,out, requester);
 			
 			// Marcando tempo de término
 			endTime = System.currentTimeMillis();

@@ -28,7 +28,17 @@ import org.midas.metainfo.ContainerInfo;
 public abstract class Agent implements Provider,Callable<Object>
 {
 	public volatile boolean alive = true;
+	private String port = null;
 	
+
+	public String getPort() {
+		return this.port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}	
+
 	/**
 	 * Abstract method that acts as the providing interface for the agents services, 
 	 * must be implemented by the concrete agent class.
@@ -86,8 +96,9 @@ public abstract class Agent implements Provider,Callable<Object>
 	 * 
 	 * @see ContainerInfo
 	 */
-	protected ContainerInfo recoverMetaInformation()
+	public ContainerInfo recoverMetaInformation()
 	{
-		return (Catalog.getContainerInfo());
+		return (Catalog.getContainerInfos(this.port));
 	}
+
 }

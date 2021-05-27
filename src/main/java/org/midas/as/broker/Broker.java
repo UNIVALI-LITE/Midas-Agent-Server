@@ -33,9 +33,14 @@ public class Broker
 		return (Sender.pingServer()); 	
 	}
 			
-	public static void registerOnServer() throws BrokerException
+	public static void registerOnServer(String port) throws BrokerException
 	{				
-		Sender.registerOnServer();
+		Sender.registerOnServer(port);
+	}
+
+	public static void deregisterOnServer(String port) throws BrokerException
+	{				
+		Sender.deregisterOnServer(port);
 	}
 
 	public static boolean checkServerForService(String organization, String service) throws BrokerException
@@ -43,8 +48,8 @@ public class Broker
 		return(Sender.checkServerForService(organization,service));
 	}
 
-	public void require(String organization, String service, Map in, List out) throws BrokerException
+	public void require(String organization, String service, Map in, List out, String requesterName) throws BrokerException
 	{
-		Sender.requireServer(organization,service,in,out);		
+		Sender.requireServer(organization,service,in,out, requesterName);		
 	}
 }

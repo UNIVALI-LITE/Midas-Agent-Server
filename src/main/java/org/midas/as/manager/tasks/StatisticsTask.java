@@ -10,7 +10,7 @@ public class StatisticsTask implements Callable<Object>
 	{
 		while(true)
 		{
-			ManagerScreen.userInterfaceEvent("Refresh Statistics");
+			//ManagerScreen.userInterfaceEvent("Refresh Statistics");
 			Thread.sleep(250);
 		}												
 	}
